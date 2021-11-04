@@ -1,5 +1,8 @@
 from random import randint
 
+mat_dir = "../Arquivos/matrizes/"
+
+
 def create(n, elements):
     matrix = []
     for i in range(n):
@@ -12,7 +15,7 @@ def create(n, elements):
 
 
 def save(file_name, matrix, n):
-    prefix = "./matrizes/"
+    prefix = mat_dir
     filename = prefix + file_name
 
     with open(filename, "w") as f:
@@ -32,7 +35,7 @@ def generate(filename, n, elements=100):
 
 def read_file(file_name, length=0):
 
-    prefix = "./matrizes/"
+    prefix = mat_dir
     filename = prefix + file_name
 
     if not length:
