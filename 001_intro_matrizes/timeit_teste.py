@@ -1,38 +1,47 @@
 import timeit
 import main
 
+begin = 90
 size = 100
 times = 10
 
-def f0():
-    for i in range(2, size):
-        main.generate("{}_1_file.txt".format(i), i)
-        main.generate("{}_2_file.txt".format(i), i)
+M = main.Matrix
 
-def f3():
-    for i in range(2, size):
-        C = main.multiply("{}_1_file.txt".format(i), "{}_2_file.txt".format(i), i)
-        main.save("{}_3_file.txt".format(i), C, i)
+def f_create():
+    for i in range(begin, size):
+        M.generate("{}_1_file.txt".format(i), i)
+        M.generate("{}_2_file.txt".format(i), i)
 
-def f3_add():
-    for i in range(2, size):
-        C = main.add("{}_1_file.txt".format(i), "{}_2_file.txt".format(i), i)
-        main.save("{}_3_add_file.txt".format(i), C, i)
+def f_mul():
+    for i in range(begin, size):
+        A = M(file = "{}_1_file.txt".format(i))
+        B = M(file = "{}_2_file.txt".format(i))
+        C = A * B
+        #C.save_txt("{}_mul_file.txt".format(i))
 
-def f3_sub():
-    for i in range(2, size):
-        C = main.sub("{}_1_file.txt".format(i), "{}_2_file.txt".format(i), i)
-        main.save("{}_3_sub_file.txt".format(i), C, i)
+def f_add():
+    for i in range(begin, size):
+        A = M(file = "{}_1_file.txt".format(i))
+        B = M(file = "{}_2_file.txt".format(i))
+        C = A * B
+        #C.save_txt("{}_add_file.txt".format(i))
+
+def f_sub():
+    for i in range(begin, size):
+        A = M(file = "{}_1_file.txt".format(i))
+        B = M(file = "{}_2_file.txt".format(i))
+        C = A * B
+        #C.save_txt("{}_sub_file.txt".format(i))
 
 
 print("Creation = ", end="")
-print(timeit.timeit(f0, number = times)/times)
+print(timeit.timeit(f_create, number = times)/times)
 
-print("03 = ", end="")
-print(timeit.timeit(f3, number = times)/times)
+print("Multiply = ", end="")
+print(timeit.timeit(f_mul, number = times)/times)
 
-print("03 Soma = ", end="")
-print(timeit.timeit(f3_add, number = times)/times)
+print("Add = ", end="")
+print(timeit.timeit(f_add, number = times)/times)
 
-print("03 Subtracao = ", end="")
-print(timeit.timeit(f3_sub, number = times)/times)
+print("Sub = ", end="")
+print(timeit.timeit(f_sub, number = times)/times)
