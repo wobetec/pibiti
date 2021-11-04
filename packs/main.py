@@ -190,6 +190,11 @@ class Vector:
             prod += self.vector[i] * other.vector[i]
         return prod
 
+    
+    def multi(self, n):
+        for i in range(self.size):
+            self.vector[i] *= n
+
 
     def show(self, elements=100000):
         n = int(log10(elements)) + 1
