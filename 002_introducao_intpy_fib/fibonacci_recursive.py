@@ -2,6 +2,7 @@
 
 import time
 import sys
+sys.path.append("C:/Code/Repos/pibiti")
 
 from intpy.intpy import initialize_intpy, deterministic
 
