@@ -2,11 +2,9 @@ from math import log10
 from random import randint
 
 mat_dir = "../Arquivos/matrizes/"
-vec_dir = "../Arquivos/vectors/"
 
 
 class Matrix:
-
 
     def read_file(file_name):
         filename = mat_dir + file_name
@@ -16,7 +14,7 @@ class Matrix:
 
             for line in f:
                 linha = [int(x) for x in line.split()]
-                matrix.append(linha)
+                matrix.append(Matrix(lista=linha))
 
         return matrix
 
@@ -26,89 +24,107 @@ class Matrix:
 
         for i in range(n):
             line = [randint(0, elements) for j in range(m if m != 0 else n)]
-            matrix.append(line)
+            matrix.append(Matrix(lista=line))
 
         return matrix
 
 
-    def __init__(self, n=0, m=0, file=None, matrix=None, range=100):
-        if n != 0:
+    def __init__(self, n=0, m=0, file=None, matrix=None, lista=None, range=100):
+        #Criar matriz
+        if n != 0: 
             self.matrix = Matrix.create(n, m = m, elements = range)
             self.size = (n, m if m!=0 else n)
 
-        elif file != None:
+        #File
+        elif file != None: 
             self.matrix = Matrix.read_file(file)
-            self.size = (len(self.matrix), len(self.matrix[0]))
+            self.size = (len(self.matrix), len(self.matrix[0].matrix))
 
+        #matriz de matrix
         elif matrix != None:
             self.matrix = matrix
-            self.size = (len(matrix), len(matrix[0]))
+            self.size = (len(matrix), matrix[0].size[1])
 
+        #lista de inteiros
+        elif lista != None:
+            self.matrix = lista
+            self.size = (1, len(lista))
+
+        #Gera matrix vazia
         else:
             self.matrix = None
             self.size = None
 
 
     def __add__(self, other):
-        #Do
-        matrix = []
-        for i in range(self.size[0]):
-            line = []
-            for j in range(self.size[1]):
-                line.append(self.matrix[i][j] + other.matrix[i][j])
-            matrix.append(line)
 
-        return Matrix(matrix=matrix)
+        if self.size[0] == 1:
+            line = []
+            for i in range(self.size[1]):
+                a, b = self.matrix[i], other.matrix[i]
+                line.append(a + b)
+            return Matrix(lista = line)
+
+        else:
+            matrix = []
+            for i in range(self.size[0]):
+                u, v = self.matrix[i], other.matrix[i]
+                matrix.append(u + v)
+            return Matrix(matrix = matrix)
 
 
     def __sub__(self, other):
-        #Do
-        matrix = []
-        for i in range(self.size[0]):
+        if self.size[0] == 1:
             line = []
-            for j in range(self.size[1]):
-                line.append(self.matrix[i][j] - other.matrix[i][j])
-            matrix.append(line)
+            for i in range(self.size[1]):
+                a, b = self.matrix[i], other.matrix[i]
+                line.append(a - b)
+            return Matrix(lista = line)
 
-        return Matrix(matrix=matrix)
+        else:
+            matrix = []
+            for i in range(self.size[0]):
+                u, v = self.matrix[i], other.matrix[i]
+                matrix.append(u - v)
+            return Matrix(matrix = matrix)
 
 
     def T(self):
         matrix = []
 
         for i in range(self.size[1]):
-            col = [self.matrix[j][i] for j in range(self.size[0])]
-            matrix.append(col)
+            col = [self.matrix[j].matrix[i] for j in range(self.size[0])]
+            matrix.append(Matrix(lista = col))
         
         return Matrix(matrix=matrix)
 
 
-    def prod_int(a, b, n):
-        prod = 0
-        for i in range(n):
-            prod += a[i]*b[i]
-        return prod
-
-
     def __mul__(self, other):
-        #Do
-        B = other.T()
-        matrix = []
 
-        for i in range(self.size[0]):
-            line = []
-            for j in range(self.size[1]):
-                line.append(Matrix.prod_int(self.matrix[i], B.matrix[j], self.size[1]))
-            matrix.append(line)
+        if self.size[0] == 1 and other.size[0] == 1:
+            prod = 0
+            for i in range(self.size[1]):
+                prod += self.matrix[i] * other.matrix[i]
+            return prod
 
-        return Matrix(matrix=matrix)
+        else:
+            B = other.T()
+            matrix = []
+
+            for i in range(self.size[0]):
+                line = []
+                for j in range(self.size[1]):
+                    line.append(self.matrix[i] * B.matrix[j])
+                matrix.append(Matrix(lista = line))
+
+            return Matrix(matrix=matrix)
 
 
     def show(self, elements=100000):
         n = int(log10(elements)) + 1
-        for i in range(self.size[0]):
-            for j in range(self.size[1]):
-                print(f"{self.matrix[i][j]}".rjust(n," "), end="")
+        for line in self.matrix:
+            for i in line.matrix:
+                print(f"{i}".rjust(n," "), end="")
             print("")
 
 
@@ -117,8 +133,8 @@ class Matrix:
         filename = prefix + file_name
 
         with open(filename, "w") as f:
-            for i in range(self.size[0]):
-                f.write(" ".join(str(a) for a in self.matrix[i]))
+            for line in self.matrix:
+                f.write(" ".join(str(a) for a in line.matrix))
                 f.write("\n")
 
 
@@ -130,91 +146,7 @@ class Matrix:
             print("Generation Erro")
 
 
-class Vector:
-
-
-    def read_file(file_name):
-        filename = vec_dir + file_name
-
-        vector = []
-        with open(filename, "r") as f:
-            for line in f:
-                vector = line.split(" ")
-
-        return vector
-
-
-    def create(n, elements=100):
-        vector = [randint(0, elements) for j in range(n)]
-
-        return vector
-
-
-    def __init__(self, n=0, file=None, vector=None, range=100):
-        if n != 0:
-            self.vector = Vector.create(n, elements = range)
-            self.size = n
-
-        elif file != None:
-            self.vector = Vector.read_file(file)
-            self.size = len(self.vector)
-
-        elif vector != None:
-            self.vector = vector
-            self.size = len(vector)
-
-        else:
-            self.vector = None
-            self.size = None
-
-
-    def __add__(self, other):
-        vector = []
-        for i in range(self.size):
-            vector.append(self.vector[i] + other.vector[i])
-
-        return Vector(vector=vector)
-
-
-    def __sub__(self, other):
-        vector = []
-        for i in range(self.size):
-            vector.append(self.vector[i] - other.vector[i])
-
-        return Vector(vector=vector)
-
-
-    def __mul__(self, other):
-        prod = 0
-        for i in range(self.size):
-            prod += self.vector[i] * other.vector[i]
-        return prod
-
-
-    def show(self, elements=100000):
-        n = int(log10(elements)) + 1
-        for i in range(self.size):
-            print(f"{self.vector[i]}".rjust(n," "), end="")
-        print("")
-
-    def save_txt(self, file_name):
-        prefix = vec_dir
-        filename = prefix + file_name
-
-        with open(filename, "w") as f:
-            f.write(" ".join(str(a) for a in self.vector))
-
-
-    def generate(file_name, n, elements=100):
-        vector = Vector(n=n, range=elements)
-        try:
-            vector.save_txt(file_name)
-        except:
-            print("Generation Erro")
-
-
 if __name__ == "__main__":
-    for i in range(2, 101):
-        Matrix.generate("{}_1_file.txt".format(i), i)
-        Matrix.generate("{}_2_file.txt".format(i), i)
+
     pass
+

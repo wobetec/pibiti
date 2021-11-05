@@ -16,8 +16,8 @@ def mult(A, B):
     for i in range(A.size[0]):
         line = []
         for j in range(A.size[1]):
-            line.append(Matrix.prod_int(A.matrix[i], B.matrix[j], A.size[1]))
-        matrix.append(line)
+            line.append(A.matrix[i] * B.matrix[j])
+        matrix.append(Matrix(lista = line))
 
     return Matrix(matrix=matrix)
 
@@ -25,6 +25,7 @@ def mult(A, B):
 @initialize_intpy(__file__)
 def main(A, B):
     C = mult(A, B)
+
 
 if __name__ == "__main__":
     n = int(sys.argv[1])
