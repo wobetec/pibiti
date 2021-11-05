@@ -1,11 +1,13 @@
+import sys
+sys.path.append("C:/Code/Repos/pibiti")
 import timeit
-import main
+from packs.main import *
 
 begin = 90
 size = 100
 times = 10
 
-M = main.Matrix
+M = Matrix
 
 def f_create():
     for i in range(begin, size):
