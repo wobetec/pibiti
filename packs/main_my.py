@@ -147,6 +147,9 @@ class Matrix:
 
 
 if __name__ == "__main__":
-
+    A = Matrix(file="3_1_file.txt")
+    B = Matrix(file="3_2_file.txt")
+    C = A*B
+    C.show()
     pass
 
