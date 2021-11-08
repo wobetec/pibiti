@@ -147,9 +147,9 @@ class Matrix:
 
 
 if __name__ == "__main__":
-    A = Matrix(file="3_1_file.txt")
-    B = Matrix(file="3_2_file.txt")
-    C = A*B
-    C.show()
+    for i in range(101, 501):
+        Matrix.generate(f"{i}_1_file.txt", i)
+        Matrix.generate(f"{i}_2_file.txt", i)
+        print(i)
     pass
 
