@@ -1,9 +1,9 @@
 #implementado a multiplicação com granulosidade matriz
 import sys
-sys.path.append("../")
+sys.path.append("../packs/")
 
 from intpy.intpy import initialize_intpy, deterministic
-from packs.main_list import *
+from main_list import *
 
 import time
 
@@ -25,6 +25,7 @@ def mult(A, B):
 @initialize_intpy(__file__)
 def main(A, B):
     C = mult(A, B)
+    C.show()
 
 
 if __name__ == "__main__":
