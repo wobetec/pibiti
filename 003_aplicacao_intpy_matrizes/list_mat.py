@@ -1,6 +1,6 @@
 #implementado a multiplicação com granulosidade matriz
 import sys
-sys.path.append("C:/Code/Repos/pibiti")
+sys.path.append("../")
 
 from intpy.intpy import initialize_intpy, deterministic
 from packs.main_list import *

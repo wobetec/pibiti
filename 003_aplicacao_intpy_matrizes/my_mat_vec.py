@@ -1,6 +1,6 @@
 #implementação utilizando granulosidade vetor e matriz
 import sys
-sys.path.append("C:/Code/Repos/pibiti")
+sys.path.append("../")
 
 from intpy.intpy import initialize_intpy, deterministic
 from packs.main_my import *
