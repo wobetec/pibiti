@@ -15,9 +15,9 @@ class Matrix:
 
             for line in f:
                 linha = [int(x) for x in line.split()]
-                matrix.append(Matrix(lista=linha))
+                matrix.append(linha)
 
-        return matrix
+        return np.array(matrix)
 
 
     def create(n, m=0, elements=100):
@@ -25,31 +25,26 @@ class Matrix:
 
         for i in range(n):
             line = [randint(0, elements) for j in range(m if m != 0 else n)]
-            matrix.append(Matrix(lista=line))
+            matrix.append(line)
 
-        return matrix
+        return np.array(matrix)
 
 
-    def __init__(self, n=0, m=0, file=None, matrix=None, lista=None, range=100):
+    def __init__(self, n=0, m=0, file=None, matrix=None, range=100):
         #Criar matriz
         if n != 0: 
             self.matrix = Matrix.create(n, m = m, elements = range)
-            self.size = (n, m if m!=0 else n)
+            self.size = self.matrix.shape
 
         #File
         elif file != None: 
             self.matrix = Matrix.read_file(file)
-            self.size = (len(self.matrix), len(self.matrix[0].matrix))
+            self.size = self.matrix.shape
 
         #matriz de matrix
-        elif matrix != None:
+        elif matrix.any():
             self.matrix = matrix
-            self.size = (len(matrix), matrix[0].size[1])
-
-        #lista de inteiros
-        elif lista != None:
-            self.matrix = lista
-            self.size = (1, len(lista))
+            self.size = self.matrix.shape
 
         #Gera matrix vazia
         else:
@@ -58,73 +53,32 @@ class Matrix:
 
 
     def __add__(self, other):
-
-        if self.size[0] == 1:
-            line = []
-            for i in range(self.size[1]):
-                a, b = self.matrix[i], other.matrix[i]
-                line.append(a + b)
-            return Matrix(lista = line)
-
-        else:
-            matrix = []
-            for i in range(self.size[0]):
-                u, v = self.matrix[i], other.matrix[i]
-                matrix.append(u + v)
-            return Matrix(matrix = matrix)
+        matrix = self.matrix + other.matrix
+        return Matrix(matrix = matrix)
 
 
     def __sub__(self, other):
-        if self.size[0] == 1:
-            line = []
-            for i in range(self.size[1]):
-                a, b = self.matrix[i], other.matrix[i]
-                line.append(a - b)
-            return Matrix(lista = line)
-
-        else:
-            matrix = []
-            for i in range(self.size[0]):
-                u, v = self.matrix[i], other.matrix[i]
-                matrix.append(u - v)
-            return Matrix(matrix = matrix)
+        matrix = self.matrix - other.matrix
+        return Matrix(matrix = matrix)
 
 
     def T(self):
-        matrix = []
-
-        for i in range(self.size[1]):
-            col = [self.matrix[j].matrix[i] for j in range(self.size[0])]
-            matrix.append(Matrix(lista = col))
-        
-        return Matrix(matrix=matrix)
+        matrix = self.matrix.transpose()
+        return Matrix(matrix = matrix)
 
 
     def __mul__(self, other):
-
-        if self.size[0] == 1 and other.size[0] == 1:
-            prod = 0
-            for i in range(self.size[1]):
-                prod += self.matrix[i] * other.matrix[i]
-            return prod
-
-        else:
-            B = other.T()
-            matrix = []
-
-            for i in range(self.size[0]):
-                line = []
-                for j in range(self.size[1]):
-                    line.append(self.matrix[i] * B.matrix[j])
-                matrix.append(Matrix(lista = line))
-
-            return Matrix(matrix=matrix)
+        matrix = self.matrix.dot(other.matrix)
+        return Matrix(matrix = matrix)
+        """
+        
+        """
 
 
     def show(self, elements=100000):
         n = int(log10(elements)) + 1
         for line in self.matrix:
-            for i in line.matrix:
+            for i in line:
                 print(f"{i}".rjust(n," "), end="")
             print("")
 
@@ -135,7 +89,7 @@ class Matrix:
 
         with open(filename, "w") as f:
             for line in self.matrix:
-                f.write(" ".join(str(a) for a in line.matrix))
+                f.write(" ".join(str(a) for a in line))
                 f.write("\n")
 
 
@@ -148,6 +102,9 @@ class Matrix:
 
 
 if __name__ == "__main__":
-
+    A = Matrix(file="3_1_file.txt")
+    B = Matrix(file="3_2_file.txt")
+    C = A*B
+    C.show()
     pass
 
