@@ -122,6 +122,7 @@ class Matrix:
             print("Generation Erro")
 
 
+
 if __name__ == "__main__":
     A = Matrix(file="3_1_file.txt")
     B = Matrix(file="3_2_file.txt")

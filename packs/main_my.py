@@ -147,8 +147,8 @@ class Matrix:
 
 
 if __name__ == "__main__":
-    for i in range(1, 101):
-        Matrix.generate(f"200_{i}_file.txt", 200)
+    for i in range(1, 4):
+        Matrix.generate(f"1000_{i}_file.txt", 1000, elements=1000)
         print(i)
     pass
 
